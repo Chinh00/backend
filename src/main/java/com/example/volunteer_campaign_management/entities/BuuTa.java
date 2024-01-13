@@ -3,7 +3,7 @@ package com.example.volunteer_campaign_management.entities;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "buu_ta")
+@Table(name = "buuta")
 public class BuuTa {
     @Id
     @Column(name = "id")

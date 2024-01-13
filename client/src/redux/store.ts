@@ -1,6 +1,6 @@
-import {configureStore, createStore} from "@reduxjs/toolkit";
+import {configureStore} from "@reduxjs/toolkit";
 import RootReducer from "@/redux/root.slice.ts";
-import { persistStore, persistReducer } from 'redux-persist'
+import {persistReducer, persistStore} from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 
 const store = configureStore({

@@ -4,7 +4,8 @@ import "./App.css"
 import {ConfigProvider} from "antd";
 import {Provider} from "react-redux";
 import store, {persist} from "@/redux/store.ts";
-import { PersistGate } from 'redux-persist/integration/react'
+import {PersistGate} from 'redux-persist/integration/react'
+
 function App() {
   const router = Router()
   const queryClient = new QueryClient()

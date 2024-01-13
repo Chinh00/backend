@@ -1,5 +1,5 @@
 import {Navigate, Outlet, useRoutes} from "react-router-dom";
-import {lazy, memo, Suspense, useContext} from "react";
+import {lazy, memo, Suspense} from "react";
 import LayoutDefault from "@/Layout/LayoutDefault.tsx";
 import {useAppSelector} from "@/redux/hook.ts";
 import LayoutAuth from "@/Layout/LayoutAuth.tsx";
@@ -27,6 +27,53 @@ const Router = () => {
     return useRoutes([
         {
             path: "",
+            element: <ProtectedRouter />,
+            children: [
+                {
+                    path: "",
+                    element: <LayoutDefault />,
+                    children: [
+                        {
+                            path: "/",
+                            element:
+                                <Suspense fallback={<div>Loading ....</div>}>
+                                    <Home />
+                                </Suspense>
+                        },
+                        {
+                            path: "/buucuc",
+                            element:
+                                <Suspense fallback={<div>Loading ....</div>}>
+                                    <BuuCuc />
+                                </Suspense>
+                        },
+                        {
+                            path: "/phantuyen",
+                            element:
+                                <Suspense fallback={<div>Loading ....</div>}>
+                                    <PhanTuyen />
+                                </Suspense>
+                        },
+                        {
+                            path: "/buuta",
+                            element:
+                                <Suspense fallback={<div>Loading ....</div>}>
+                                    <BuuTa />
+                                </Suspense>
+                        },
+                        {
+                            path: "/donhang",
+                            element:
+                                <Suspense fallback={<div>Loading ....</div>}>
+                                    <DonHang />
+                                </Suspense>
+                        },
+                    ]
+                }
+            ]
+        },
+        {
+            path: "",
             element: <RejectRouter />,
             children: [
                 {
@@ -41,58 +88,7 @@ const Router = () => {
                 }
             ]
         },
-        {
-            path: "",
-            element: <ProtectedRouter />,
-            children: [{
-                path: "",
-                element: <LayoutDefault />,
-                children: [
-                    {
-                        path: "/home",
-                        element:
-                            <Suspense fallback={<div>Loading ....</div>}>
-                                <Home />
-                            </Suspense>
-                    },
-                    {
-                        path: "/login",
-                        element:
-                            <Suspense fallback={<div>Loading ....</div>}>
-                                <Login />
-                            </Suspense>
-                    },
-                    {
-                        path: "/buucuc",
-                        element:
-                            <Suspense fallback={<div>Loading ....</div>}>
-                                <BuuCuc />
-                            </Suspense>
-                    },
-                    {
-                        path: "/phantuyen",
-                        element:
-                            <Suspense fallback={<div>Loading ....</div>}>
-                                <PhanTuyen />
-                            </Suspense>
-                    },
-                    {
-                        path: "/buuta",
-                        element:
-                            <Suspense fallback={<div>Loading ....</div>}>
-                                <BuuTa />
-                            </Suspense>
-                    },
-                    {
-                        path: "/donhang",
-                        element:
-                            <Suspense fallback={<div>Loading ....</div>}>
-                                <DonHang />
-                            </Suspense>
-                    },
-                ]
-            }]
-        }
+
 
 
 

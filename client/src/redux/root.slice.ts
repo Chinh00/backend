@@ -8,7 +8,7 @@ export type RootInterface = {
 }
 
 const initState: RootInterface = {
-    isLogin: false,
+    isLogin: true,
     role: 0,
     profile: null
 }

@@ -1,5 +1,5 @@
 import {ColumnsType} from "antd/es/table";
-import {Button, DatePicker, Form, Input, message, Modal, Select, Table} from "antd";
+import {Button, DatePicker, Drawer, Form, Input, message, Modal, Select, Table} from "antd";
 import {EditOutlined} from "@ant-design/icons";
 import {useMutation, useQuery} from "react-query";
 import {Dispatch, memo, SetStateAction, useEffect, useState} from "react";
@@ -8,6 +8,8 @@ import DonhangService from "@/core/services/donhang.service.ts";
 import {Donhang} from "@/core/models/donhang.ts";
 import * as moment from "moment/moment";
 import dayjs from 'dayjs';
+import PhanDon from "@/pages/DonHang/PhanDon.tsx";
+import TaoMoi from "@/pages/DonHang/TaoMoi.tsx";
 
 export interface BuuTaUpdateProps {
     data: Donhang,
@@ -116,10 +118,13 @@ const DonHang = () => {
         {
             title: "Hành động",
             render: (value) => {
-                return <Button onClick={() => {
-                    setOpenEdit(data?.data!.filter(e => e.id === value.id)[0]!)
-                    form.setFieldsValue(openEdit)
-                }} icon={<EditOutlined />} />
+                return <>
+                    <Button onClick={() => {
+                        setOpenEdit(data?.data!.filter(e => e.id === value.id)[0]!)
+                        form.setFieldsValue(openEdit)
+                    }} icon={<EditOutlined />} />
+                    <Button className={"ml-2"} onClick={() => setOpenDrawer(value)} >Phân đơn</Button>
+                </>
             }
         },
     ]
@@ -128,19 +133,17 @@ const DonHang = () => {
         queryKey: "donhang",
         queryFn: () => DonhangService.list()
     })
-    const createMutate = useMutation({
-        mutationKey: "create",
-        mutationFn: DonhangService.create,
-        onSuccess: e => {
-            message.success("Phân đơn thành công cho bưu tá")
-        }
-    })
+
 
     const [openEdit, setOpenEdit] = useState<Donhang | null>(null)
     const {data: buucucs} = useQuery({
         queryKey: "buucuc",
         queryFn: () => BuucucService.list()
     })
+    const [openDrawer, setOpenDrawer] = useState<Donhang | null>(null);
+
+
+
 
     const [open, setOpen] = useState(false)
     return <div className={"w-full px-20"}>
@@ -152,63 +155,11 @@ const DonHang = () => {
 
         {!!openEdit && <DonHangUpdate data={openEdit} dispatch={setOpenEdit} refetch={refetch} />}
 
+        <PhanDon setOpenDrawer={setOpenDrawer} openDrawer={openDrawer} />
 
-        <Modal
-
-            onOk={() => {
-                createMutate.mutate({
-                    ...form.getFieldsValue(),
-                    id: 0,
-                }, {
-                    onSuccess: () => {
-                        form.resetFields()
-                        setOpen(false)
-                        refetch()
-                    }
-                })
-            }}
-            open={open} onCancel={() => setOpen(false)} okButtonProps={{className: "bg-blue-400"}} >
-                <span className={"font-bold text-center mx-auto flex justify-center items-center"}>
-                    Tạo mới đơn hàng
-                </span>
-            <Form
-                form={form}
-                className={"p-10"}
-            >
-                <Form.Item
-                    name={"diemgom"}
-                >
-                    <Input placeholder={"Điểm gom hàng"} size={"large"} />
-                </Form.Item>
-
-                <Form.Item
-                    name={"taitrong"}
-                >
-                    <Input placeholder={"Tải trọng đơn hàng"} size={"large"} />
-                </Form.Item>
-                <Form.Item
-                    name={"thoigiangom"}
-                >
-                    <DatePicker placeholder={"Thời gian gom"} />
-                </Form.Item>
+        <TaoMoi open={open} setOpen={setOpen} form={form} refetch={refetch} buucucs={buucucs?.data || []} />
 
 
-
-                <Form.Item
-                    name={"trangthai"}
-                >
-                    <Select placeholder={"Chọn trạng thái"} size={"large"} options={[{value: "Đã phân tuyến", label: "Đã phân tuyến"}, {value: "Tạo đơn", label: "Tạo đơn"}, {value: "Đã xác nhận", label: "Đã xác nhận"}]} />
-                </Form.Item>
-
-                <Form.Item
-                    name={"buucucnhanid"}
-                >
-                    <Select placeholder={"Chọn bưu cục nhận"} size={"large"} options={buucucs?.data.map(val => {
-                        return { value: val?.id, label: val?.ten}
-                    })} />
-                </Form.Item>
-            </Form>
-        </Modal>
 
 
     </div>
